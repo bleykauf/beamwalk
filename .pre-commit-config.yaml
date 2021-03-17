@@ -1,0 +1,11 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 20.8b1
+    hooks:
+      - id: black
+        exclude: |
+          (?x)^(
+              versioneer.py|
+              docs/conf.py|
+              beamwalk/_version.py
+          )$

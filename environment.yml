@@ -1,0 +1,15 @@
+name: thorlabspm100_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pip
+  - numpy
+  - pyvisa
+  - pyvisa-py
+  - matplotlib
+  - pandas
+  - click
+  - pip:
+    - thorlabspm100
+    - ballpark

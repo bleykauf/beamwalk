@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools >= 38.3.0", "wheel"]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py34, py35, py36, py37, py38
+[travis]
+python =
+    3.8: py38
+    3.7: py37
+    3.6: py36
+    3.5: py35
+    3.4: py34
+[testenv]
+deps =
+    pytest
+    pytest-cov
+commands =
+    pytest --cov {envsitepackagesdir}/beamwalk
+"""
+
+[tool.black]
+line-length = 88
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | versioneer.py
+  | couplingmonitor/_version.py
+  | docs/config.py
+)
+'''
