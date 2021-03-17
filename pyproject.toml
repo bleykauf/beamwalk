@@ -37,7 +37,7 @@ exclude = '''
     | dist
   )/
   | versioneer.py
-  | couplingmonitor/_version.py
+  | beamwalk/_version.py
   | docs/config.py
 )
 '''

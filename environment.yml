@@ -1,4 +1,4 @@
-name: thorlabspm100_env
+name: beamwalk_env
 channels:
   - conda-forge
   - defaults
@@ -11,5 +11,5 @@ dependencies:
   - pandas
   - click
   - pip:
-    - thorlabspm100
-    - ballpark
+      - thorlabspm100
+      - ballpark
