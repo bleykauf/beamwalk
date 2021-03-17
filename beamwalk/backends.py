@@ -8,15 +8,16 @@ from time import sleep
 class PowerMeter:
     def __init__(self):
 
-        os.system("cls" if os.name == "nt" else "clear")
+        self.instr = None
 
+        os.system("cls" if os.name == "nt" else "clear")
         youros = platform.system()
         if youros == "Linux":
             print("You're running Linux")
             """
             The following line is the inst(rument) setup for linx
             """
-            inst = usbtmc.USBTMC()  # device='/dev/usbtmc0'
+            self.instr = usbtmc.USBTMC()  # device='/dev/usbtmc0'
         elif youros == "Windows":
             print("---")
             print("You're running Windows")
@@ -24,31 +25,17 @@ class PowerMeter:
             The following lines are the inst(rument) setup for linx windows
             """
             rm = visa.ResourceManager()
-            # Trying a list of knwon Powermeter addresses
-            pmlist = [
-                "USB0::0x1313::0x8078::P0020110::INSTR",
-                "USB0::0x1313::0x8079::P1001003::INSTR",
-            ]
+            for resource in rm.list_resources():
+                if resource.startswith("USB0::0x1313::0x807"):
+                    print(f"Found Powermeter {resource}")
+                    instr = rm.open_resource(resource, timeout=1000)
+                    self.instr = ThorlabsPM100(inst=instr)
+                    print(f"Connected to: {resource}")
+                    break
 
-            print("---")
-            connecting = True
-            while connecting:
-                for pm in pmlist:
-                    try:
-                        # timeout is in ms
-                        inst = rm.open_resource(pm, timeout=1000)
-                        print("Connected to: " + pm)
-                        connecting = False
-                        break
-                    except:
-                        print(pm + "  not found")
-                        print("Available USB devices are:\n")
-                        print(rm.list_resources())
-            print("---")
-        else:
-            print("You are runnig an unknown system.")
+        if not self.instr:
+            raise ConnectionRefusedError("No Powermeter found.")
 
-        self.instr = ThorlabsPM100(inst=inst)
         sleep(1)
         self.instr.sense.power.dc.range.auto = "ON"
 
