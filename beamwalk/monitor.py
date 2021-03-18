@@ -29,7 +29,7 @@ def run(goal, logging, filename, backend, field, netloc):
     # setup power meter
     if backend == "tl":
         power_meter = backends.ThorlabsPM100()
-    elif backend == "rpyc":
+    elif backend == "lds":
         power_meter = backends.LabDataService(netloc, field)
 
     # data logging

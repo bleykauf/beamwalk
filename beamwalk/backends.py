@@ -47,7 +47,7 @@ class ThorlabsPM100:
 class LabDataService:
     def __init__(self, netloc, field):
 
-        import rcyp
+        import rpyc
 
         self.field = field
         try:
