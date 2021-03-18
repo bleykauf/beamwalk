@@ -60,7 +60,8 @@ class LabDataService:
             print(f"Connection to service at {host}:{port} refused.")
 
     def read(self):
-        data = self.service.root.exposed_get_data(self.field)
+        # NOTE: LabDataService expects a list of fields
+        data = self.service.root.exposed_get_data([self.field])
         val = data["fields"][self.field]
         return val
 
