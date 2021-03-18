@@ -78,3 +78,63 @@ class LabDataService:
         else:
             raise ValueError("'{}' is not a valid location".format(netloc))
         return host, port
+
+
+class ADBox:
+    def __init__(self, addr="ASRL5::INSTR", channel=0):
+        self.channel = channel
+        rm = visa.ResourceManager("@py")
+        self.adbox = rm.open_resource(addr, baud_rate=38400)
+        self.adbox.timeout = 100
+
+    offset = [
+        0.0,
+        4.15745e6,
+        4.16222e6,
+        4.15324e6,
+        4.17488e6,
+        4.15419e6,
+        4.16251e6,
+        0.0,
+    ]
+    scale = [
+        1.0e-9,
+        -2.82970703125e-05,
+        -3.847431640625e-05,
+        -3.847431640625e-05,
+        -2.046484375e-05,
+        -2.987021484375e-05,
+        -3.530615234375e-05,
+        1.0,
+    ]
+
+    def read(self):
+
+        valid_data = False
+        while not valid_data:
+            # msg1 contains only the initial message CH *, \n and \r and sometimes some
+            # of the first returned values, as work around combine strings and filter
+            # afterwards
+            self.adbox.write("CH MCP * \r")
+            msg = ""
+            try:
+                # read buffer until empty
+                while True:
+                    msg += self.adbox.read()
+            except visa.errors.VisaIOError:
+                # if buffer is empty
+                num_and_semicolon = set("0123456789;")
+                msg = "".join(c for c in msg if c in num_and_semicolon)
+                msg = msg.rstrip().split(";")
+                msg = list(filter(None, msg))  # filter out empty substrings
+
+            data = list(map(int, msg))  # convert str to list of int
+
+            if len(data) == 8:
+                # check data consistency, if something went wrong
+                valid_data = True
+
+        # only one channel relevant
+        value = data[self.channel]
+        value = (value - self.offset[self.channel]) * self.scale[self.channel]
+        return value

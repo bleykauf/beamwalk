@@ -1,7 +1,6 @@
 import os
 import signal
 from datetime import datetime
-from time import sleep
 
 import click
 import numpy as np
@@ -17,9 +16,10 @@ from .coupling import Plotter
 @click.option("--backend", default="tl", help="Backend (tl or lds)")
 @click.option("--field", default="val", help="(for LabDataService backend only)")
 @click.option(
-    "--netloc", default="localhost:18862", help="(for LabDataService backend only)"
+    "--address", default="localhost:18862", help="(for LabDataService backend only)"
 )
-def run(goal, logging, filename, backend, field, netloc):
+@click.option("--channel", default=1, help="Channel")
+def run(goal, logging, filename, backend, field, address, channel):
 
     os.system("cls" if os.name == "nt" else "clear")
 
@@ -30,7 +30,9 @@ def run(goal, logging, filename, backend, field, netloc):
     if backend == "tl":
         power_meter = backends.ThorlabsPM100()
     elif backend == "lds":
-        power_meter = backends.LabDataService(netloc, field)
+        power_meter = backends.LabDataService(address, field)
+    elif backend == "adbox":
+        power_meter = backends.ADBox(channel=channel)
 
     # data logging
     if logging:
