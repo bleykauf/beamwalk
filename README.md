@@ -2,7 +2,7 @@
 
 Helper program for launching laser light into optical fibers.
 
-Originally created by Klaus Döhringshoff.
+Originally created by Klaus Döringshoff.
 
 ## Installation
 
