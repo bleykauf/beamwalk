@@ -14,7 +14,12 @@ from .coupling import Plotter
 @click.option("--goal", default=1.0, help="Goal in W")
 @click.option("--logging", default=False, help="logging beahviour", is_flag=True)
 @click.option("--filename", "--file", default="", help="file/path for logging")
-def run(goal=1, logging=False, filename=""):
+@click.option("--backend", default="tl", help="Backend (tl or lds)")
+@click.option("--field", default="val", help="(for LabDataService backend only)")
+@click.option(
+    "--netloc", default="localhost:18862", help="(for LabDataService backend only)"
+)
+def run(goal, logging, filename, backend, field, netloc):
 
     os.system("cls" if os.name == "nt" else "clear")
 
@@ -22,8 +27,10 @@ def run(goal=1, logging=False, filename=""):
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     # setup power meter
-    power_meter = backends.PowerMeter()
-    sleep(1)
+    if backend == "tl":
+        power_meter = backends.ThorlabsPM100()
+    elif backend == "lds":
+        power_meter = backends.LabDataService(netloc, field)
 
     # data logging
     if logging:
