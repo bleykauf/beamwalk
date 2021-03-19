@@ -137,4 +137,6 @@ class ADBox:
         # only one channel relevant
         value = data[self.channel]
         value = (value - self.offset[self.channel]) * self.scale[self.channel]
+        # convert from mW to W
+        value = 1e-3 * value
         return value
