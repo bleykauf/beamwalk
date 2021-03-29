@@ -1,9 +1,11 @@
-from ThorlabsPM100 import ThorlabsPM100 as ThorlabsPM100_
-from ThorlabsPM100 import usbtmc
-import pyvisa as visa
 import os
 import platform
 from time import sleep
+
+import numpy as np
+import pyvisa as visa
+from ThorlabsPM100 import ThorlabsPM100 as ThorlabsPM100_
+from ThorlabsPM100 import usbtmc
 
 
 class ThorlabsPM100:
@@ -42,6 +44,17 @@ class ThorlabsPM100:
 
     def read(self):
         return self.instr.read
+
+
+class RandomNumberMeter:
+    def __init__(self):
+        self.current_value = 0
+
+    def read(self):
+        step = 1e-3 * 2 * (np.random.rand() - 0.5)
+        self.current_value += step
+        self.current_value = max(self.current_value, 0)
+        return self.current_value
 
 
 class LabDataService:
