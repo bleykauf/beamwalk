@@ -48,12 +48,12 @@ class ThorlabsPM100:
 
 class RandomNumberMeter:
     def __init__(self):
-        self.current_value = 0
+        self.current_value = 1e-12
 
     def read(self):
         step = 1e-3 * 2 * (np.random.rand() - 0.5)
         self.current_value += step
-        self.current_value = max(self.current_value, 0)
+        self.current_value = max(self.current_value, 1e-12)
         return self.current_value
 
 
