@@ -9,7 +9,7 @@ Originally created by Klaus Döringshoff.
 Beamwalk can be installed via pip:
 
 ```
-pip install bemwalk
+pip install beamwalk
 ```
 
 
@@ -17,7 +17,7 @@ If you plan to make changes to the code, use
 ```
 git clone https://github.com/bleykauf/beamwalk.git
 cd beamwalk
-pip install .
+pip install -e .
 ```
 
 ## Usage
